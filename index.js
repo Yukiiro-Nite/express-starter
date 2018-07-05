@@ -4,7 +4,9 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const routeLoader = require('./routeLoader');
 
-exports.start = (port, preload, postload) => {
+const noop = () => {};
+
+exports.start = (port, preload = noop, postload = noop) => {
   preload(express, app, io);
   routeLoader(app, io)
     .loadRoutes()
