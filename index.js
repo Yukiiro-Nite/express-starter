@@ -6,7 +6,7 @@ const routeLoader = require('./routeLoader');
 
 const noop = () => {};
 
-exports.start = (port, preload = noop, postload = noop) => {
+function start (port, preload = noop, postload = noop, server) {
   preload(express, app, io);
   routeLoader(app, io)
     .loadRoutes()
@@ -18,4 +18,12 @@ exports.start = (port, preload = noop, postload = noop) => {
         postload(express, app, io);
       });
     });
+}
+
+exports.start = (port, preload = noop, postload = noop) => {
+  start(port, preload, postload, server)
 };
+
+exports.startWithCustomHttp = (port, preload = noop, postload = noop, httpCallback) => {
+  start(port, preload, postload, httpCallback(app))
+}
