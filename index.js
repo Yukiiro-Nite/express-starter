@@ -1,12 +1,13 @@
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const socketIO = require('socket.io');
 const routeLoader = require('./routeLoader');
 
 const noop = () => {};
 
 function start (port, preload = noop, postload = noop, server) {
+  const io = socketIO(server)
   preload(express, app, io);
   routeLoader(app, io)
     .loadRoutes()
@@ -24,6 +25,6 @@ exports.start = (port, preload = noop, postload = noop) => {
   start(port, preload, postload, server)
 };
 
-exports.startWithCustomHttp = (port, preload = noop, postload = noop, httpCallback) => {
+exports.startWithCustomHttp = (port, preload = noop, postload = noop, httpCallback = noop) => {
   start(port, preload, postload, httpCallback(app))
 }
