@@ -6,10 +6,10 @@ const routeLoader = require('./routeLoader');
 
 const noop = () => {};
 
-function start (port, preload = noop, postload = noop, server) {
+function start (port, preload = noop, postload = noop, server, routesPath) {
   const io = socketIO(server)
   preload(express, app, io);
-  routeLoader(app, io)
+  routeLoader(app, io, routesPath)
     .loadRoutes()
     .then(routes => {
       server.listen(port, () => {
@@ -21,10 +21,10 @@ function start (port, preload = noop, postload = noop, server) {
     });
 }
 
-exports.start = (port, preload = noop, postload = noop) => {
-  start(port, preload, postload, server)
+exports.start = (port, preload = noop, postload = noop, routesPath) => {
+  start(port, preload, postload, server, routesPath)
 };
 
-exports.startWithCustomHttp = (port, preload = noop, postload = noop, httpCallback = noop) => {
-  start(port, preload, postload, httpCallback(app))
+exports.startWithCustomHttp = (port, preload = noop, postload = noop, httpCallback = noop, routesPath) => {
+  start(port, preload, postload, httpCallback(app), routesPath)
 }

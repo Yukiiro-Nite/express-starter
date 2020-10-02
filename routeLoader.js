@@ -1,11 +1,13 @@
 const cwd = process.cwd();
+const path = require('path');
 const readdir = require('fs').readdir;
+const defaultPath = `${cwd}/routes`;
 
-module.exports = ( app, io ) => {
+module.exports = ( app, io, routesPath = defaultPath ) => {
   let routes = {};
 
   const getRouteFiles = () => new Promise((resolve, reject) =>
-    readdir(`${cwd}/routes`, (err, files) => {
+    readdir(routesPath, (err, files) => {
       if(err) {
         reject(err);
       } else {
@@ -20,7 +22,7 @@ module.exports = ( app, io ) => {
     },routes));
 
   const loadRoute = file => {
-    let route = require(`${cwd}/routes/${file}`);
+    let route = require(path.join(routesPath, file));
     if(route.config) {
       if(route.config.routes instanceof Array) {
         route.config.routes.forEach(routeConfig => {
